@@ -1,7 +1,7 @@
 <template>
   <div class="player" v-show="playList.length>0">
     <transition name="normal" @enter="enter" @after-enter="afterEnter" @leave="leave" @after-leave="afterLeave">
-      <div class="normal-player" v-show="fullScreen">
+      <div class="normal-player" v-show="fullScreen" ref="normalPlayer">
         <div class="background">
           <img width="100%" height="100%" :src="currentSong.image">
         </div>
@@ -374,6 +374,13 @@ export default {
       ])
     },
     watch: {
+      fullScreen(newbool) {
+        if(newbool) {
+          this.$refs.normalPlayer.style.zIndex = '150'
+        } else {
+          this.$refs.normalPlayer.style.zIndex = '-1'
+        }
+      },
       currentSong(newSong, oldSong) {
         if(!newSong.id || (newSong.id === oldSong.id)) { 
           return

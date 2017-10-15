@@ -22,8 +22,8 @@ var proxyTable = config.dev.proxyTable
 
 var app = express()
 var apiRoutes = express.Router()
-apiRoutes.get('/getDiscList', function(req,res) {
-var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+apiRoutes.get('/getDiscList', function (req, res) {
+  var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
   axios.get(url, {
     headers: {
       referer: 'https://c.y.qq.com/',
@@ -60,6 +60,27 @@ apiRoutes.get('/lyric', function (req, res) {
     console.log(e)
   })
 })
+
+apiRoutes.get('/getSongList', function (req, res) {
+  var url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
+  axios.get(url, {
+    headers: {
+      referer: 'https://c.y.qq.com/',
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then((response) => {
+    var ret = response.data;
+    if (typeof ret === 'string') {
+      var index = ret.indexOf('(');
+      ret = JSON.parse(ret.slice(index+1,-1));
+    }
+    res.json(ret);
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+
 app.use('/api', apiRoutes)
 
 var compiler = webpack(webpackConfig)
